@@ -32,7 +32,7 @@
     },
     "blobContainerName": {
       "type": "string",
-      "defaultValue": "files",
+      "defaultValue": "sourcefiles",
       "metadata": {
         "description": "Name of the blob container in the Azure Storage account."
       }
