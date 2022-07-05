@@ -58,7 +58,10 @@
     {
       "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
       "apiVersion": "2021-08-01",
-      "name": "[parameters('blobContainerName')]"
+      "name": "[parameters('blobContainerName')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories",
