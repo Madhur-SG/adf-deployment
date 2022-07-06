@@ -75,7 +75,7 @@
     {
       "type": "Microsoft.DataFactory/factories/linkedservices",
       "apiVersion": "2018-06-01",
-      "name": "[variables('dataFactoryLinkedServiceName')]",
+      "name": "[format('{0}/{1}', parameters('dataFactoryName'), variables('dataFactoryLinkedServiceName'))]",
       "properties": {
         "type": "AzureBlobStorage",
         "typeProperties": {
