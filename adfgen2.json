@@ -11,28 +11,28 @@
   "parameters": {
     "dataFactoryName": {
       "type": "string",
-      "defaultValue": "adf_AICTR",
+      "defaultValue": "[format('datafactory{0}', uniqueString(resourceGroup().id))]",
       "metadata": {
         "description": "Data Factory Name"
       }
     },
     "location": {
       "type": "string",
-      "defaultValue": "eastus",
+      "defaultValue": "[resourceGroup().location]",
       "metadata": {
         "description": "Location of the data factory."
       }
     },
     "storageAccountName": {
       "type": "string",
-      "defaultValue": "blobstorageaictr",
+      "defaultValue": "[format('storage{0}', uniqueString(resourceGroup().id))]",
       "metadata": {
         "description": "Name of the Azure storage account that contains the input/output data."
       }
     },
     "blobContainerName": {
       "type": "string",
-      "defaultValue": "sourcefiles",
+      "defaultValue": "[format('blob{0}', uniqueString(resourceGroup().id))]",
       "metadata": {
         "description": "Name of the blob container in the Azure Storage account."
       }
@@ -40,8 +40,8 @@
   },
   "variables": {
     "dataFactoryLinkedServiceName": "StorageLinkedService",
-    "dataFactoryDataSetInName": "src_storage",
-    "dataFactoryDataSetOutName": "sink_storage",
+    "dataFactoryDataSetInName": "SrcDataset",
+    "dataFactoryDataSetOutName": "SinkDataset",
     "pipelineName": "Pipeline"
   },
   "resources": [
@@ -81,7 +81,11 @@
         "typeProperties": {
           "connectionString": "[format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1}', parameters('storageAccountName'), listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2021-08-01').keys[0].value)]"
         }
-      }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DataFactory/factories', parameters('dataFactoryName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName'))]"
+      ]
     },
     {
       "type": "Microsoft.DataFactory/factories/datasets",
@@ -133,11 +137,11 @@
     {
       "type": "Microsoft.DataFactory/factories/pipelines",
       "apiVersion": "2018-06-01",
-      "name": "[variables('pipelineName')]",
+      "name": "[format('{0}/{1}', parameters('dataFactoryName'), variables('pipelineName'))]",
       "properties": {
         "activities": [
           {
-            "name": "CopyActivity",
+            "name": "MyCopyActivity",
             "type": "Copy",
             "policy": {
               "timeout": "7.00:00:00",
