@@ -86,7 +86,7 @@
     {
       "type": "Microsoft.DataFactory/factories/datasets",
       "apiVersion": "2018-06-01",
-      "name": "[variables('dataFactoryDataSetInName')]",
+      "name": "[format('{0}/{1}', parameters('dataFactoryName'), variables('dataFactoryDataSetInName'))]",
       "properties": {
         "linkedServiceName": {
           "referenceName": "[variables('dataFactoryLinkedServiceName')]",
